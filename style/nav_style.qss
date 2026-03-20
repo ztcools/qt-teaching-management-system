@@ -1,0 +1,43 @@
+/* 导航按钮基础样式 */
+QToolButton {
+    min-width: 70px;
+    min-height: 90px;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1D2129;
+    background-color: transparent;
+}
+
+/* 悬浮状态 */
+QToolButton:hover {
+    background-color: #E8F3FF;
+    color: #1677FF;
+}
+
+/* 选中状态 */
+QToolButton:checked {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #1677FF, stop:1 #4096FF);
+    color: white;
+}
+
+/* 选中+悬浮 */
+QToolButton:checked:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #0E66D9, stop:1 #3385FF);
+}
+
+/* 禁用状态 */
+QToolButton:disabled {
+    color: #86909C;
+    background-color: #F2F3F5;
+}
+
+/* 导航容器 */
+QWidget#widget {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E5E6EB;
+    padding: 12px;
+}

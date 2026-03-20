@@ -1,0 +1,62 @@
+/* 科技感配色体系 - 柔和高级 */
+/* Qt样式表不支持CSS变量，直接使用颜色值 */
+
+/* 主窗口 */
+QMainWindow {
+    background-color: #F5F7FA;
+}
+
+/* 中心窗口 */
+QWidget#centralWidget {
+    background-color: #F5F7FA;
+    padding: 16px;
+}
+
+/* StackedWidget */
+QStackedWidget {
+    background-color: transparent;
+}
+
+/* 子页面容器 */
+QWidget#pageStudentinfo, QWidget#pageSchedule, QWidget#pageFinance,
+QWidget#pageHonor, QWidget#pageSystemSetting {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* 标题栏通用样式 */
+QLabel#titleLabel {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1677FF;
+    margin-bottom: 16px;
+}
+
+/* 通用卡片样式 */
+QFrame[frameShape="4"] {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #E5E6EB;
+}
+
+/* 滚动条样式 */
+QScrollBar:vertical {
+    background-color: #F5F7FA;
+    width: 8px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #C9CDD4;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #86909C;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}

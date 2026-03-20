@@ -1,0 +1,54 @@
+/* 主窗口样式 */
+QMainWindow {
+    background-color: #F5F7FA;
+}
+
+/* 中心窗口 */
+QWidget#centralWidget {
+    background-color: #F5F7FA;
+}
+
+/* StackedWidget */
+QStackedWidget {
+    background-color: transparent;
+}
+
+/* 子页面容器 */
+QWidget#pageStudentinfo, QWidget#pageSchedule, QWidget#pageFinance,
+QWidget#pageHonor, QWidget#pageSystemSetting {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E5E6EB;
+}
+
+/* 标题栏通用样式 */
+QLabel#titleLabel {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1677FF;
+}
+
+/* 通用按钮样式 */
+QPushButton {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E6EB;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #1D2129;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background-color: #E8F3FF;
+    border-color: #1677FF;
+    color: #1677FF;
+}
+
+QPushButton:pressed {
+    background-color: #BAE0FF;
+}
+
+QPushButton:disabled {
+    background-color: #F2F3F5;
+    color: #86909C;
+}
