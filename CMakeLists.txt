@@ -27,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         src.qrc
         databasemanager.h databasemanager.cpp
+        studentinfowidget.h studentinfowidget.cpp studentinfowidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET EdycationSystem APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -48,6 +49,7 @@ endif()
 
 target_link_libraries(EdycationSystem PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql)
 target_link_libraries(EdycationSystem PRIVATE Qt6::Core)
+target_include_directories(EdycationSystem PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

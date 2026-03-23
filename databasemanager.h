@@ -48,6 +48,12 @@ public:
      */
     bool isConnected() const;
 
+    /**
+     * @brief 获取数据库连接
+     * @return QSqlDatabase 数据库连接
+     */
+    QSqlDatabase& getQSqlDatabase();
+
     // ==================== studentInfo 表操作 ====================
     /**
      * @brief 插入学生信息

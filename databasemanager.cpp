@@ -1,7 +1,7 @@
 #include "databasemanager.h"
 
 // 定义数据库配置常量
-const QString DataBaseManager::DB_DIR = "C:/Users/36146/EdycationSystem/data/";
+const QString DataBaseManager::DB_DIR = "C:/Users/36146/code/QTproject/EdycationSystem/data/";
 const QString DataBaseManager::DB_NAME = "student_system.db";
 const QString DataBaseManager::DB_CONN_NAME = "student_system_conn";
 
@@ -21,6 +21,11 @@ DataBaseManager::~DataBaseManager()
 bool DataBaseManager::isConnected() const
 {
     return m_database.isOpen();
+}
+
+QSqlDatabase &DataBaseManager::getQSqlDatabase()
+{
+    return m_database;
 }
 
 bool DataBaseManager::initDatabase()
