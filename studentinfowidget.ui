@@ -61,12 +61,12 @@
      </column>
      <column>
       <property name="text">
-       <string>照片</string>
+       <string>当前进度</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>当前进度</string>
+       <string>照片</string>
       </property>
      </column>
     </widget>

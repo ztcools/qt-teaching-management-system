@@ -9,6 +9,7 @@ namespace Ui {
 class StudentInfoWidget;
 }
 class QGroupBox;
+class QTableWidgetItem;
 class StudentInfoWidget : public QWidget
 {
     Q_OBJECT
@@ -24,6 +25,9 @@ private slots:
     void on_btnDeleteItem_clicked();
 
     void on_btnDeleteLine_clicked();
+
+    void handleItemChanged(QTableWidgetItem* item);
+
 
 private:
     Ui::StudentInfoWidget *ui;

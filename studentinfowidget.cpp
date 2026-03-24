@@ -19,6 +19,7 @@
 #include <QIODevice>
 #include <QPushButton>
 #include <QMap>
+#include "tabledelegates.h"
 
 StudentInfoWidget::StudentInfoWidget(QWidget *parent)
     : QWidget(parent)
@@ -26,6 +27,28 @@ StudentInfoWidget::StudentInfoWidget(QWidget *parent)
 {
     ui->setupUi(this);
     ui->tableWidget->verticalHeader()->setDefaultSectionSize(100);
+
+    // 性别列代理（第2列）
+    ComboBoxDelegate* genderDelegate = new ComboBoxDelegate(this);
+    genderDelegate->setItems(QStringList() << "男" << "女");
+    ui->tableWidget->setItemDelegateForColumn(2, genderDelegate);
+
+    // 进度列代理（第6列）
+    ComboBoxDelegate* progressDelegate = new ComboBoxDelegate(this);
+    progressDelegate->setItems(QStringList() << "0%" << "20%" << "40%" << "60%" << "80%" << "100%");
+    ui->tableWidget->setItemDelegateForColumn(6, progressDelegate);
+
+    // 日期列代理（第3、4列）
+    ui->tableWidget->setItemDelegateForColumn(3, new DateEditDelegate(this));
+    ui->tableWidget->setItemDelegateForColumn(4, new DateEditDelegate(this));
+
+    // ========================
+    // 图片列代理（第7列，照片列）
+    // ========================
+    ui->tableWidget->setItemDelegateForColumn(7, new ImageDelegate(this));
+    //连接item信号
+    connect(ui->tableWidget,&QTableWidget::itemChanged,this,&StudentInfoWidget::handleItemChanged);
+
     refreshTable();
 }
 
@@ -262,6 +285,82 @@ void StudentInfoWidget::handleDialogAccepted(QGroupBox *formGroup, QGroupBox *ph
         QMessageBox::information(this,tr("成功"),tr("已成功添加学生：%1").arg(nameEdit->text()));
     }
 
+}
+
+void StudentInfoWidget::handleItemChanged(QTableWidgetItem *item)
+{
+    // 1. 获取行、列
+    int row = item->row();
+    int col = item->column();
+
+    // 2. 禁止修改学号（第0列）
+    if (col == 0) {
+        QMessageBox::warning(this, "警告", "学号是主键，不能修改！");
+        refreshTable();
+        return;
+    }
+
+    // 3. 获取原始学号（WHERE条件用）
+    QString originalId = ui->tableWidget->item(row, 0)->text();
+    if (originalId.isEmpty()) return;
+
+    // 4. 数据库列名（必须和你表结构一致）
+    QStringList columnNames = {
+        "id", "name", "gender", "birthday", "join_date", "study_goal", "progress", "photo"
+    };
+
+    // 越界保护
+    if (col < 0 || col >= columnNames.size()) return;
+
+    QString columnName = columnNames[col];
+
+    // 5. 获取数据库连接
+    QSqlDatabase& db = DataBaseManager::instance().getQSqlDatabase();
+    if (!db.isOpen()) {
+        QMessageBox::critical(this, "错误", "数据库未连接");
+        return;
+    }
+
+    // 6. 开启事务
+    db.transaction();
+
+    QSqlQuery updateQuery(db);
+    QString sql = QString("UPDATE studentInfo SET %1 = ? WHERE id = ?").arg(columnName);
+
+    updateQuery.prepare(sql);
+
+    // ==============================
+    // 图片列（最后一列）
+    // ==============================
+    if (col == columnNames.size() - 1) {
+        // ✅ 正确：从 model 取图片
+        QModelIndex index = ui->tableWidget->model()->index(row, col);
+        QByteArray imgData = index.data(Qt::UserRole).toByteArray();
+        updateQuery.addBindValue(imgData);
+    }
+    // ==============================
+    // 普通列
+    // ==============================
+    else {
+        updateQuery.addBindValue(item->text().trimmed());
+    }
+
+    // WHERE id = ?
+    updateQuery.addBindValue(originalId);
+
+    // ==============================
+    // 执行并判断
+    // ==============================
+    if (!updateQuery.exec()) {
+        db.rollback();
+        refreshTable();
+        QMessageBox::critical(this, "更新失败",
+                              "数据库错误：" + updateQuery.lastError().text());
+        return;
+    }
+
+    // 提交
+    db.commit();
 }
 
 
