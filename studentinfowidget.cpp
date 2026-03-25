@@ -19,6 +19,8 @@
 #include <QIODevice>
 #include <QPushButton>
 #include <QMap>
+#include <QSqlQuery>
+#include <QSqlDatabase>
 #include "tabledelegates.h"
 
 StudentInfoWidget::StudentInfoWidget(QWidget *parent)
