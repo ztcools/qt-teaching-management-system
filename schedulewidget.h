@@ -12,6 +12,7 @@ class QTableWidget;
 class QComboBox;
 class QLabel;
 class QPushButton;
+class QTableWidgetItem;
 
 class ScheduleWidget : public QWidget
 {
@@ -21,7 +22,11 @@ public:
     explicit ScheduleWidget(QWidget *parent = nullptr);
     ~ScheduleWidget();
     int customWeekNumber(const QDate& date);
-
+private slots:
+    void handleItemChanged(QTableWidgetItem* item);
+    void deleteCourse();
+    void showPrevWeek();
+    void showNextWeek();
 private:
     QTableWidget* tableWidget;
     QComboBox* yearComboBox;
@@ -39,6 +44,7 @@ private:
     void loadSchedule();
     void setupTable();
     QPair<QDate,QDate> getWeekRange(int year,int week);
+    void addCourse();
 
 };
 
