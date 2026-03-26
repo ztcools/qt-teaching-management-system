@@ -344,23 +344,30 @@ void ScheduleWidget::deleteCourse()
         return;
     }
 
-    // 获取日期
     int year = yearComboBox->currentData().toInt();
     int week = weekComboBox->currentData().toInt();
     QPair<QDate,QDate> weekRange = getWeekRange(year, week);
     QDate currentDate = weekRange.first.addDays(dayIndex);
-
-    // 获取时间段
     QString timeSlot = times[timeIndex];
 
-    // 确认删除
-    int ret = QMessageBox::question(this, "提示", "确定要删除该课程吗？",
-                                  QMessageBox::Yes | QMessageBox::No);
-    if(ret == QMessageBox::No) {
-        return; // 用户取消操作
+    // ✅ 自定义弹窗按钮文字
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("提示");
+    msgBox.setText("确定要删除该课程吗？");
+    msgBox.setIcon(QMessageBox::Question);
+
+    // 添加中文按钮
+    QPushButton *btnConfirm = msgBox.addButton("确认", QMessageBox::AcceptRole);
+    QPushButton *btnCancel = msgBox.addButton("取消", QMessageBox::RejectRole);
+    msgBox.setDefaultButton(btnCancel); // 默认选中取消
+
+    msgBox.exec();
+
+    if (msgBox.clickedButton() != btnConfirm) {
+        return; // 不是确认就取消操作
     }
 
-    // 删除课程
+    // 数据库删除逻辑
     QSqlDatabase& db = DataBaseManager::instance().getQSqlDatabase();
     QSqlQuery query(db);
     query.prepare("DELETE FROM schedule WHERE date = ? AND time = ?");
