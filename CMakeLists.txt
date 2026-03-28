@@ -31,6 +31,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         tabledelegates.h
         schedulewidget.h schedulewidget.cpp schedulewidget.ui
         financialwidget.h financialwidget.cpp financialwidget.ui
+        honorwallwidget.h honorwallwidget.cpp honorwallwidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET EdycationSystem APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

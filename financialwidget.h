@@ -28,6 +28,9 @@ private:
     void addRecord();
     void deleteRecord();
     void editRecord();
+    void updateChart();
+    void updatePieChart();
+    void populateStudentComboBox();
     Ui::FinancialWidget *ui;
     QChartView* pieChartView;
     QTableWidget* tableWidget;
