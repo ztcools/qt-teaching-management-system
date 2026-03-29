@@ -12,11 +12,22 @@
 #include <QApplication>      // qApp必备
 #include <QStackedWidget>    // QStackedWidget必备
 #include <QAbstractButton>   // 按钮组遍历备用
+#include "logindialog.h"
+#include "settingswidget.h"
+#include "databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // 显示登录对话框
+    LoginDialog loginDialog;
+    if (loginDialog.exec() != QDialog::Accepted) {
+        // 登录失败，退出应用
+        qApp->quit();
+        return;
+    }
+
     ui->setupUi(this);
 
     // 2. 改用兼容所有Qt版本的QStringList写法（放弃列表初始化）
@@ -41,6 +52,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 4. 全局应用样式（qApp需要<QApplication>头文件）
     qApp->setStyleSheet(totalStyle);
+
+    // 替换系统设置页面
+    // 移除原有的系统设置页面
+    QWidget* oldSettingsWidget = ui->stackedWidget->widget(4);
+    if (oldSettingsWidget) {
+        ui->stackedWidget->removeWidget(oldSettingsWidget);
+        delete oldSettingsWidget;
+    }
+    // 添加新的系统设置页面
+    SettingsWidget* newSettingsWidget = new SettingsWidget();
+    ui->stackedWidget->insertWidget(4, newSettingsWidget);
 
     // 5. 导航按钮配置（修正后）
     QButtonGroup *btnGp = new QButtonGroup(this);
