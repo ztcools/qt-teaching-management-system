@@ -1,8 +1,7 @@
 #include "databasemanager.h"
+#include "settings.h"
 
 // 定义数据库配置常量
-const QString DataBaseManager::DB_DIR = "C:/Users/36146/code/QTproject/EdycationSystem/data/";
-const QString DataBaseManager::DB_NAME = "student_system.db";
 const QString DataBaseManager::DB_CONN_NAME = "student_system_conn";
 
 DataBaseManager::DataBaseManager(QObject *parent) : QObject(parent)
@@ -30,17 +29,18 @@ QSqlDatabase &DataBaseManager::getQSqlDatabase()
 
 bool DataBaseManager::initDatabase()
 {
-    // 创建数据目录
-    QDir dir(DB_DIR);
+    // 从设置中获取数据库路径
+    QString dbPath = Settings::instance().getDatabasePath();
+    
+    // 确保数据库目录存在
+    QFileInfo fileInfo(dbPath);
+    QDir dir = fileInfo.dir();
     if (!dir.exists()) {
-        if (!dir.mkpath(DB_DIR)) {
-            qDebug() << "创建数据目录失败：" << DB_DIR;
+        if (!dir.mkpath(dir.absolutePath())) {
+            qDebug() << "创建数据目录失败：" << dir.absolutePath();
             return false;
         }
     }
-
-    // 数据库文件路径
-    QString dbPath = DB_DIR + DB_NAME;
 
     // 移除旧连接
     if (QSqlDatabase::contains(DB_CONN_NAME)) {

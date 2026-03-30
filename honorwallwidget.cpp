@@ -228,6 +228,9 @@ void HonorWallWidget::loadImageFromDatabase()
 
         // 创建垂直布局
         QVBoxLayout* itemLayout = new QVBoxLayout();
+        itemLayout->setAlignment(Qt::AlignTop);
+        itemLayout->setSpacing(10);
+        itemLayout->setContentsMargins(0,0,0,0);
         itemLayout->addWidget(imageLabel);
         itemLayout->addWidget(descLabel);
 

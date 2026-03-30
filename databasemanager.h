@@ -260,8 +260,6 @@ private:
     QSqlDatabase m_database; ///< 数据库连接
 
     // 数据库配置常量
-    const static QString DB_DIR;        ///< 数据库目录
-    const static QString DB_NAME;       ///< 数据库文件名
     const static QString DB_CONN_NAME;  ///< 数据库连接名
 };
 

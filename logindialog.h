@@ -28,7 +28,6 @@ private:
     QPushButton* cancelButton;
     QCheckBox* rememberPasswordCheckBox;
     void checkAndCreateInitialUser();
-    QString hashPassword(const QString& password);
     void on_loginButton_clicked();
     bool loadCredentials(QString& username, QString& password);
     void saveCredentials(const QString& username, const QString& password);

@@ -9,7 +9,6 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QHBoxLayout>
-#include <QCryptographicHash>
 #include <QMessageBox>
 #include <QCheckBox>
 LoginDialog::LoginDialog(QWidget *parent)
@@ -28,7 +27,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     loginButton = new QPushButton("登录", this);
     cancelButton = new QPushButton("取消", this);
     rememberPasswordCheckBox = new QCheckBox("记住密码", this);
-    rememberPasswordCheckBox->setChecked(Settings::instance().getRememberPassword());
+    rememberPasswordCheckBox->setChecked(Settings::instance().getCacheEnabled());
     //布局
     QGridLayout* mainLayout = new QGridLayout(this);
     mainLayout->addWidget(usernameLabel, 0, 0);
@@ -70,7 +69,7 @@ void LoginDialog::checkAndCreateInitialUser()
     }
     if(query.next() && query.value(0).toInt() == 0)
     {
-        QString hashedInitialPassword = hashPassword(initialPassword);
+        QString hashedInitialPassword = Settings::instance().encryptPassword(initialPassword);
         query.prepare("INSERT INTO users (username,password) VALUES (:username,:password)");
         query.bindValue(":username", initialUsername);
         query.bindValue(":password", hashedInitialPassword);
@@ -79,12 +78,6 @@ void LoginDialog::checkAndCreateInitialUser()
             qDebug() << "插入初始用户失败：" << query.lastError().text();
         }
     }
-}
-
-QString LoginDialog::hashPassword(const QString& password)
-{
-    QByteArray hash = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
-    return hash.toHex();
 }
 
 void LoginDialog::on_loginButton_clicked()
@@ -98,7 +91,18 @@ void LoginDialog::on_loginButton_clicked()
     }
 
     // 对密码进行哈希处理
-    QString hashedPassword = hashPassword(password);
+    // 如果是记住密码的情况，从配置文件读取的密码已经是加密后的
+    // 否则需要对用户输入的明文密码进行加密
+    QString hashedPassword;
+    if (Settings::instance().getRememberPassword() && 
+        Settings::instance().getCacheEnabled() && 
+        password == Settings::instance().getCachedPassword()) {
+        // 使用的是缓存的加密密码
+        hashedPassword = password;
+    } else {
+        // 用户手动输入的密码，需要加密
+        hashedPassword = Settings::instance().encryptPassword(password);
+    }
 
     // 查询数据库验证用户
     QSqlDatabase& db = DataBaseManager::instance().getQSqlDatabase();
@@ -128,11 +132,10 @@ void LoginDialog::on_loginButton_clicked()
 
 bool LoginDialog::loadCredentials(QString &username, QString &password)
 {
+    username = Settings::instance().getLastUser();
     if (!Settings::instance().getCacheEnabled()) {
         return false;
     }
-
-    username = Settings::instance().getLastUser();
     if (Settings::instance().getRememberPassword()) {
         password = Settings::instance().getCachedPassword();
     }
@@ -143,6 +146,7 @@ bool LoginDialog::loadCredentials(QString &username, QString &password)
 void LoginDialog::saveCredentials(const QString& username, const QString& password)
 {
     Settings::instance().setLastUser(username);
+    Settings::instance().setCacheEnabled(true);
     Settings::instance().setRememberPassword(rememberPasswordCheckBox->isChecked());
     if (rememberPasswordCheckBox->isChecked()) {
         Settings::instance().setCachedPassword(password);
