@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QCheckBox>
+#include <QCloseEvent>
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LoginDialog)
@@ -56,6 +57,13 @@ LoginDialog::~LoginDialog()
     delete ui;
 }
 
+void LoginDialog::closeEvent(QCloseEvent *event)
+{
+    // 用户点击关闭按钮时，拒绝对话框（返回 QDialog::Rejected）
+    reject();
+    event->accept();
+}
+
 void LoginDialog::checkAndCreateInitialUser()
 {
     const QString initialUsername = "admin";
@@ -91,16 +99,21 @@ void LoginDialog::on_loginButton_clicked()
     }
 
     // 对密码进行哈希处理
-    // 如果是记住密码的情况，从配置文件读取的密码已经是加密后的
-    // 否则需要对用户输入的明文密码进行加密
+    // 如果启用了记住密码，且当前密码框的值与缓存的加密密码相同，说明是自动填充的
+    // 直接使用缓存的加密密码进行验证，不需要再次加密
     QString hashedPassword;
-    if (Settings::instance().getRememberPassword() && 
-        Settings::instance().getCacheEnabled() && 
-        password == Settings::instance().getCachedPassword()) {
-        // 使用的是缓存的加密密码
-        hashedPassword = password;
+    if (Settings::instance().getRememberPassword() &&
+        Settings::instance().getCacheEnabled()) {
+        QString cachedPassword = Settings::instance().getCachedPassword();
+        if (!cachedPassword.isEmpty() && password == cachedPassword) {
+            // 使用的是缓存的加密密码
+            hashedPassword = password;
+        } else {
+            // 用户手动输入了新密码，需要加密
+            hashedPassword = Settings::instance().encryptPassword(password);
+        }
     } else {
-        // 用户手动输入的密码，需要加密
+        // 没有启用记住密码，对用户输入的密码进行加密
         hashedPassword = Settings::instance().encryptPassword(password);
     }
 
@@ -118,8 +131,20 @@ void LoginDialog::on_loginButton_clicked()
 
     if (query.next()) {
         // 登录成功
-        // 保存登录信息
-        saveCredentials(username, password);
+        // 保存登录信息（只有当用户手动输入密码时才更新缓存）
+        if (Settings::instance().getRememberPassword() &&
+            Settings::instance().getCacheEnabled()) {
+            QString cachedPassword = Settings::instance().getCachedPassword();
+            if (!cachedPassword.isEmpty() && password == cachedPassword) {
+                // 使用的是缓存密码，不更新缓存（避免重复加密）
+            } else {
+                // 用户手动输入了新密码，更新缓存
+                saveCredentials(username, password);
+            }
+        } else {
+            // 没有启用记住密码，正常保存
+            saveCredentials(username, password);
+        }
         // 保存最后登录用户
         Settings::instance().setLastUser(username);
         // 接受对话框

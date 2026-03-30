@@ -31,6 +31,9 @@ private:
     void on_loginButton_clicked();
     bool loadCredentials(QString& username, QString& password);
     void saveCredentials(const QString& username, const QString& password);
+    
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 };
 

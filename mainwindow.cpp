@@ -20,14 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    // 显示登录对话框
-    LoginDialog loginDialog;
-    if (loginDialog.exec() != QDialog::Accepted) {
-        // 登录失败，退出应用
-        qApp->quit();
-        return;
-    }
-
     ui->setupUi(this);
 
     // 2. 改用兼容所有Qt版本的QStringList写法（放弃列表初始化）
