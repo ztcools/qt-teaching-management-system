@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/力导向图.svg</file>
-        <file>src/象形柱图.svg</file>
-        <file>src/旭日图.svg</file>
-        <file>src/自定义.svg</file>
+        <file>res/力导向图.svg</file>
+        <file>res/象形柱图.svg</file>
+        <file>res/旭日图.svg</file>
+        <file>res/自定义.svg</file>
         <file>style/color_palette.qss</file>
         <file>style/main_style.qss</file>
         <file>style/nav_style.qss</file>

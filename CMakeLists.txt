@@ -13,10 +13,10 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Sql Charts)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Sql Charts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        src/core/main.cpp
+        src/core/mainwindow.cpp
+        src/core/mainwindow.h
+        src/core/mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -26,15 +26,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         src.qrc
-        databasemanager.h databasemanager.cpp
-        studentinfowidget.h studentinfowidget.cpp studentinfowidget.ui
-        tabledelegates.h
-        schedulewidget.h schedulewidget.cpp schedulewidget.ui
-        financialwidget.h financialwidget.cpp financialwidget.ui
-        honorwallwidget.h honorwallwidget.cpp honorwallwidget.ui
-        settings.h settings.cpp
-        settingswidget.h settingswidget.cpp settingswidget.ui
-        logindialog.h logindialog.cpp logindialog.ui
+        src/data/databasemanager.h src/data/databasemanager.cpp
+        src/widgets/studentinfowidget.h src/widgets/studentinfowidget.cpp src/widgets/studentinfowidget.ui
+        src/data/tabledelegates.h
+        src/widgets/schedulewidget.h src/widgets/schedulewidget.cpp src/widgets/schedulewidget.ui
+        src/widgets/financialwidget.h src/widgets/financialwidget.cpp src/widgets/financialwidget.ui
+        src/widgets/honorwallwidget.h src/widgets/honorwallwidget.cpp src/widgets/honorwallwidget.ui
+        src/core/settings.h src/core/settings.cpp
+        src/widgets/settingswidget.h src/widgets/settingswidget.cpp src/widgets/settingswidget.ui
+        src/core/logindialog.h src/core/logindialog.cpp src/core/logindialog.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET EdycationSystem APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -56,7 +56,7 @@ endif()
 
 target_link_libraries(EdycationSystem PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Charts)
 target_link_libraries(EdycationSystem PRIVATE Qt6::Core)
-target_include_directories(EdycationSystem PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(EdycationSystem PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/src/core ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets ${CMAKE_CURRENT_SOURCE_DIR}/src/data)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
