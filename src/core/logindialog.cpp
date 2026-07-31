@@ -66,8 +66,12 @@ void LoginDialog::closeEvent(QCloseEvent *event)
 
 void LoginDialog::checkAndCreateInitialUser()
 {
-    const QString initialUsername = "admin";
-    const QString initialPassword = "admin123";
+    const QString initialUsername = qEnvironmentVariable("ADMIN_USER", "admin");
+    const QString initialPassword = qEnvironmentVariable("ADMIN_PASS", "");
+    if (initialPassword.isEmpty()) {
+        qInfo() << "ADMIN_PASS not set, skipping default user creation";
+        return;
+    }
     QSqlDatabase& db = DataBaseManager::instance().getQSqlDatabase();
     QSqlQuery query(db);
     // 修复 SQL 语句中的拼写错误
