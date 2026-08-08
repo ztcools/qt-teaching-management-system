@@ -1,34 +1,34 @@
-# 教学管理系统
+# Teaching Management System
 
-Qt6 + C++17 桌面应用 — SQLite 本地数据库 + MVC 架构 + 数据可视化 + 用户认证。
+Qt6 + C++17 desktop application — local SQLite database + MVC architecture + data visualization + user authentication.
 
-## 解决什么
+## What it solves
 
-教育机构需要一个轻量级、零配置部署的桌面管理系统来管理学生信息、课程安排、缴费记录和荣誉展示。无需服务器，一个可执行文件即可运行。
+Educational institutions need a lightweight, zero-config desktop management system to handle student records, course schedules, payment records, and an honor wall. No server required — one executable to run.
 
-## 技术栈
+## Tech stack
 
-Qt 6.8 · C++17 · SQLite 3 · CMake · Qt Charts · QSS 样式
+Qt 6.8 · C++17 · SQLite 3 · CMake · Qt Charts · QSS styling
 
-## 功能
+## Features
 
-- **学员管理**：增删改查 + 照片上传（数据库存储）+ 表格分页
-- **课程安排**：周视图课程表，自定义学年/学期
-- **财务管理**：缴费记录 + 饼图（按类型统计）+ 折线图（趋势分析）
-- **荣誉墙**：网格展示 + 点击预览 + 图片数据库存储
-- **用户认证**：SHA-256 密码加密 + 记住密码 + 自动登录
-- **系统设置**：数据库路径、主题切换、密码修改
+- **Student management**: CRUD + photo upload (stored in DB) + paginated tables
+- **Course scheduling**: weekly timetable view, custom academic year/term
+- **Finance management**: payment records + pie chart (by type) + line chart (trend analysis)
+- **Honor wall**: grid display + click-to-preview + images stored in DB
+- **User authentication**: SHA-256 password hashing + remember me + auto-login
+- **System settings**: database path, theme switching, password change
 
-## 运行
+## Usage
 
 ```bash
-# Qt Creator: 打开 CMakeLists.txt → 构建 → 运行
+# Qt Creator: open CMakeLists.txt → build → run
 
-# 命令行
+# Command line
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ./EdycationSystem
 ```
 
-首次登录：修改 `users` 表中的默认账户后使用。
+On first login, update the default account in the `users` table before use.
